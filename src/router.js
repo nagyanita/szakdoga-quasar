@@ -5,7 +5,8 @@ Vue.use(VueRouter);
 
 function load(component) {
   // '@' is aliased to src/components
-  return () => import(`@/${component}.vue`);
+  return () =>
+    import(`@/${component}.vue`);
 }
 
 export default new VueRouter({
@@ -22,12 +23,25 @@ export default new VueRouter({
    */
 
   mode: 'hash',
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0,
+  }),
 
-  routes: [
-    { path: '/', component: load('Hello') },
-
-    // Always leave this last one
-    { path: '*', component: load('Error404') }, // Not found
+  routes: [{
+    path: '/',
+    component: load('Hello'),
+  },
+  {
+    path: '/add-item',
+    component: load('AddItem'),
+  },
+  {
+    path: '/items-stock',
+    component: load('ItemsStock'),
+  },
+  {
+    path: '*',
+    component: load('Error404'),
+  },
   ],
 });
