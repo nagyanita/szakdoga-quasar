@@ -40,6 +40,14 @@ export default new VueRouter({
     component: load('ItemsStock'),
   },
   {
+    path: '/notes',
+    component: load('Notes'),
+  },
+  {
+    path: '/shopping-list',
+    component: load('ShoppingList'),
+  },
+  {
     path: '*',
     component: load('Error404'),
   },
