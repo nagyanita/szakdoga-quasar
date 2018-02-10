@@ -47,6 +47,10 @@
       </q-card>
     </div>
 
+    <div class="row justify-around button-container">
+      <q-btn color="primary" @click="$router.push('/')">Vissza</q-btn>
+    </div>
+
   </div>
 </template>
 
@@ -62,6 +66,7 @@
     QCardMain,
     QListHeader,
     QItemSeparator,
+    QBtn,
   } from 'quasar';
 
   export default {
@@ -79,6 +84,7 @@
       QCardMain,
       QListHeader,
       QItemSeparator,
+      QBtn,
     },
   };
 
@@ -92,5 +98,21 @@
 .items {
   padding: 0px !important;
 }
+
+.q-card-container {
+  padding: 8px !important;
+}
+
+.q-list {
+  border: none !important;
+}
+
+.q-item {
+  padding: 6px 16px !important;
+}
+
+.button-container {
+    margin-top: 20px;
+  }
 
 </style>
