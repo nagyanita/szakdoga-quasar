@@ -110,13 +110,6 @@
         console.log(elemId);
         firebase.getItems();
       },
-      getItem(item) {
-        const shoppingItem = {
-          name: item.name,
-        };
-
-        this.$firebaseRefs.shoppingLists.push(shoppingItem);
-      },
     },
     components: {
       QDataTable,
