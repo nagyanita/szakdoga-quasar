@@ -25,6 +25,8 @@
 
   import AddItemModal from './AddItem.vue';
 
+  import firebase from '../plugins/firebase';
+
   const tableConfig = {
     noHeader: false,
     leftStickyColumns: 0,
@@ -79,7 +81,6 @@
     width: '20px',
   }];
 
-
   export default {
     data() {
       return {
@@ -107,6 +108,14 @@
     methods: {
       addToShoppingList(elemId) {
         console.log(elemId);
+        firebase.getItems();
+      },
+      getItem(item) {
+        const shoppingItem = {
+          name: item.name,
+        };
+
+        this.$firebaseRefs.shoppingLists.push(shoppingItem);
       },
     },
     components: {

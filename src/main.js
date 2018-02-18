@@ -3,7 +3,6 @@ import 'quasar-extras/material-icons';
 
 import Vue from 'vue';
 import VueFire from 'vuefire';
-// import Firebase from 'firebase';
 import Quasar from 'quasar';
 import router from './router';
 
@@ -22,19 +21,6 @@ require(`quasar/dist/quasar.${__THEME}.css`);
 Vue.config.productionTip = false;
 Vue.use(Quasar); // Install Quasar Framework
 Vue.use(VueFire);
-
-/* const config = {
-  apiKey: 'AIzaSyC09wba_8ysxNfMblmZrzlgWraGW8z4xsM',
-  authDomain: 'szakdoga-quasar.firebaseapp.com',
-  databaseURL: 'https://szakdoga-quasar.firebaseio.com',
-  projectId: 'szakdoga-quasar',
-  storageBucket: 'szakdoga-quasar.appspot.com',
-  messagingSenderId: '804553793662',
-};
-
-const app = Firebase.initializeApp(config);
-const db = app.database();
-const booksRef = db.ref('books'); */
 
 if (__THEME === 'mat') {
   require('quasar-extras/roboto-font');
