@@ -2,9 +2,11 @@
 import 'quasar-extras/material-icons';
 
 import Vue from 'vue';
-import VueFire from 'vuefire';
+import Vuex from 'vuex';
 import Quasar from 'quasar';
 import router from './router';
+
+import store from './store';
 
 // === DEFAULT / CUSTOM STYLE ===
 // WARNING! always comment out ONE of the two require() calls below.
@@ -20,7 +22,7 @@ require(`quasar/dist/quasar.${__THEME}.css`);
 
 Vue.config.productionTip = false;
 Vue.use(Quasar); // Install Quasar Framework
-Vue.use(VueFire);
+Vue.use(Vuex);
 
 if (__THEME === 'mat') {
   require('quasar-extras/roboto-font');
@@ -34,6 +36,7 @@ Quasar.start(() => {
   new Vue({
     el: '#q-app',
     router,
+    store: new Vuex.Store(store),
     render: h => h(require('./App').default),
   });
 });

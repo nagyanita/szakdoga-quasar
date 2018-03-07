@@ -25,8 +25,6 @@
 
   import AddItemModal from './AddItem.vue';
 
-  import firebase from '../plugins/firebase';
-
   const tableConfig = {
     noHeader: false,
     leftStickyColumns: 0,
@@ -84,31 +82,16 @@
   export default {
     data() {
       return {
-        table: [{
-          img: '',
-          name: 'liszt',
-          barcode: '5993856819352',
-          quantity: 10,
-          unit: 'kg',
-          warranty: '2018.01.31.',
-        },
-        {
-          img: '',
-          name: 'liszt',
-          barcode: '5993856819352',
-          quantity: 10,
-          unit: 'kg',
-          warranty: '2018.01.31.',
-        },
-        ],
         config: tableConfig,
         columns: tableColumns,
       };
     },
-    methods: {
-      addToShoppingList(elemId) {
-        console.log(elemId);
-        firebase.getItems();
+    created() {
+      this.$store.dispatch('setItemsRef');
+    },
+    computed: {
+      table() {
+        return this.$store.state.items;
       },
     },
     components: {
