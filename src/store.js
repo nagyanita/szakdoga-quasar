@@ -21,6 +21,8 @@ export default {
   state: {
     items: [],
     shoppingLists: [],
+    itemsRef,
+    shoppingListsRef,
   },
   mutations: firebaseMutations,
   actions: {

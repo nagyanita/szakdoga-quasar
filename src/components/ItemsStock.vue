@@ -4,7 +4,7 @@
 
     <q-data-table :data="table" :config="config" :columns="columns">
       <template slot="col-add" scope="cell">
-        <q-btn color="indigo-7" small @click="addToShoppingList(cell.row.id)">Hozzáadás bev.listához</q-btn>
+        <q-btn color="indigo-7" small @click="addToShoppingList(cell.row)">Hozzáadás bev.listához</q-btn>
       </template>
     </q-data-table>
 
@@ -88,10 +88,22 @@
     },
     created() {
       this.$store.dispatch('setItemsRef');
+      this.$store.dispatch('setShoppingListsRef');
+    },
+    methods: {
+      addToShoppingList(elem) {
+        this.shoppingListsRef.push(elem);
+      },
     },
     computed: {
       table() {
         return this.$store.state.items;
+      },
+      shoppingLists() {
+        return this.$store.state.shoppingLists;
+      },
+      shoppingListsRef() {
+        return this.$store.state.shoppingListsRef;
       },
     },
     components: {
