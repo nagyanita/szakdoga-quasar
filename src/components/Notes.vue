@@ -5,29 +5,16 @@
     </h6>
 
     <div class="row justify-center">
-      <q-card inline class="notes">
+      <q-card inline v-for="note in notes" class="notes">
         <q-card-title>
-          Dátum
-          <q-icon slot="right" name="more_vert">
-            <q-popover ref="popover">
-              <q-list link class="no-border">
-                <q-item @click="$refs.popover.close()">
-                  <q-item-main label="Remove Card" />
-                </q-item>
-                <q-item @click="$refs.popover.close()">
-                  <q-item-main label="Send Feedback" />
-                </q-item>
-                <q-item @click="$refs.popover.close()">
-                  <q-item-main label="Share" />
-                </q-item>
-              </q-list>
-            </q-popover>
-          </q-icon>
+          {{ note.create | moment }}
+          <span slot="subtitle">{{ note.text }}</span>
         </q-card-title>
-        <q-card-main class="row justify-center">
-          <q-item-main label="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."  label-lines="3"></q-item-main>
-        </q-card-main>
+        <q-card-separator />
+        <q-card-actions class="row justify-between">
+          <q-btn flat class="text-negative" @click="removeNote(note['.key'])">Törlés</q-btn>
+          <q-btn flat class="text-primary" @click="editNote(note)">Módosítás</q-btn>
+        </q-card-actions>
       </q-card>
     </div>
 
@@ -44,14 +31,18 @@
   import {
     QCard,
     QCardTitle,
-    QCardMain,
+    QCardSeparator,
+    QCardActions,
     QIcon,
     QPopover,
     QList,
     QItem,
     QItemMain,
     QBtn,
+    Dialog,
   } from 'quasar';
+
+  import moment from 'moment';
 
   import AddNoteModal from './AddNote.vue';
 
@@ -59,10 +50,84 @@
     data() {
       return {};
     },
+    created() {
+      this.$store.dispatch('setNotesRef');
+    },
+    methods: {
+      removeNote(note) {
+        const dialog = Dialog.create({
+          title: 'Biztosan törölni akarja?',
+          buttons: [{
+            label: 'Nem',
+            handler() {
+              const timeout = setTimeout(() => {
+                clearInterval(timeout);
+                dialog.close();
+              }, 3000);
+
+              clearTimeout(timeout);
+            },
+          },
+          {
+            label: 'Igen',
+            raised: true,
+            color: 'primary',
+            handler() {
+              this.notesRef.child(note).remove();
+            },
+          }],
+        });
+      },
+      editNote(note) {
+        const dialog = Dialog.create({
+          form: {
+            units: {
+              type: 'text',
+              label: 'Jegyzet',
+              model: note.text,
+            },
+
+          },
+          buttons: [{
+            label: 'Mégsem',
+            handler() {
+              const timeout = setTimeout(() => {
+                clearInterval(timeout);
+                dialog.close();
+              }, 3000);
+
+              clearTimeout(timeout);
+            },
+          },
+          {
+            label: 'Módosítás',
+            raised: true,
+            color: 'primary',
+            handler() {
+              this.notesRef.child(note['.key']).child('text').set(note.text);
+            },
+          }],
+        });
+      },
+    },
+    filters: {
+      moment(date) {
+        return moment(date).format('YYYY-MM-DD');
+      },
+    },
+    computed: {
+      notes() {
+        return this.$store.state.notes;
+      },
+      notesRef() {
+        return this.$store.state.notesRef;
+      },
+    },
     components: {
       QCard,
       QCardTitle,
-      QCardMain,
+      QCardSeparator,
+      QCardActions,
       QIcon,
       QPopover,
       QList,
@@ -76,11 +141,11 @@
 </script>
 
 <style scoped>
-.notes {
-  width: 300px;
-}
+  .notes {
+    width: 300px;
+  }
 
-.button-container {
+  .button-container {
     margin-top: 20px;
   }
 

@@ -5,9 +5,9 @@
     </h6>
 
     <div class="row justify-center">
-      <q-card inline class="notes">
+      <q-card inline class="notes" v-for="shoppingList in this.shoppingLists">
         <q-card-title>
-          Dátum
+          {{ shoppingList['.key'] }}
           <q-icon slot="right" name="more_vert">
             <q-popover ref="popover">
               <q-list link class="no-border">
@@ -27,20 +27,8 @@
         <q-card-main class="row justify-start items">
           <q-list>
             <q-item>
-              <q-icon  name="shopping basket" />
-                <span class="on-right">Folders</span>
-            </q-item>
-            <q-item>
-              <q-icon  name="shopping basket" />
-                <span class="on-right">Folders</span>
-            </q-item>
-            <q-item>
-              <q-icon  name="shopping basket" />
-                <span class="on-right">Folders</span>
-            </q-item>
-            <q-item>
-              <q-icon  name="shopping basket" />
-                <span class="on-right">Folders</span>
+              <q-icon name="shopping basket" />
+              <span class="on-right" >-- shopping list item --</span>
             </q-item>
           </q-list>
         </q-card-main>
@@ -49,12 +37,17 @@
 
     <div class="row justify-around button-container">
       <q-btn color="primary" @click="$router.push('/')">Vissza</q-btn>
+      <q-btn color="indigo-7" @click="$refs.addShoppingListModal.open()">Bev.lista létrehozása</q-btn>
     </div>
+
+    <add-shopping-list-modal ref="addShoppingListModal" />
 
   </div>
 </template>
 
 <script>
+  /* eslint arrow-body-style: ["error", "always"] */
+
   import {
     QCard,
     QCardTitle,
@@ -69,9 +62,32 @@
     QBtn,
   } from 'quasar';
 
+  import addShoppingListModal from './AddShoppingList.vue';
+
   export default {
     data() {
-      return {};
+      return {
+
+      };
+    },
+    created() {
+      this.$store.dispatch('setShoppingListsRef');
+      this.$store.dispatch('setFirstListRef');
+      this.$store.dispatch('setSecondListRef');
+    },
+    computed: {
+      shoppingLists() {
+        return this.$store.state.shoppingLists;
+      },
+      shoppingListsRef() {
+        return this.$store.state.shoppingListsRef;
+      },
+      firstListRef() {
+        return this.$store.state.firstShoppingListRef;
+      },
+      secondListRef() {
+        return this.$store.state.secondShoppingListRef;
+      },
     },
     components: {
       QCard,
@@ -85,33 +101,34 @@
       QListHeader,
       QItemSeparator,
       QBtn,
+      addShoppingListModal,
     },
   };
 
 </script>
 
 <style scoped>
-.notes {
-  width: 300px;
-}
+  .notes {
+    width: 300px;
+  }
 
-.items {
-  padding: 0px !important;
-}
+  .items {
+    padding: 0px !important;
+  }
 
-.q-card-container {
-  padding: 8px !important;
-}
+  .q-card-container {
+    padding: 8px !important;
+  }
 
-.q-list {
-  border: none !important;
-}
+  .q-list {
+    border: none !important;
+  }
 
-.q-item {
-  padding: 6px 16px !important;
-}
+  .q-item {
+    padding: 6px 16px !important;
+  }
 
-.button-container {
+  .button-container {
     margin-top: 20px;
   }
 

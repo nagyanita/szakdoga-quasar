@@ -1,6 +1,7 @@
 var
   config = require('../config'),
   webpack = require('webpack'),
+  _ = require('lodash');
   merge = require('webpack-merge'),
   cssUtils = require('./css-utils'),
   baseWebpackConfig = require('./webpack.base.conf'),

@@ -32,6 +32,7 @@ module.exports = {
     'no-param-reassign': ["error", { "props": false }],
     'no-underscore-dangle': ["error", {
       "allow": ["_id", "_csrf"]
-    }]
+    }],
+    "no-restricted-globals": ["error", "event", "fdescribe"],
   }
 };

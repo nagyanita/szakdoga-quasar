@@ -18,10 +18,16 @@
 </template>
 
 <script>
+  /* eslint arrow-body-style: ["error", "always"] */
+
   import {
     QDataTable,
     QBtn,
+    Dialog,
+    Alert,
   } from 'quasar';
+
+  import moment from 'moment';
 
   import AddItemModal from './AddItem.vue';
 
@@ -32,7 +38,7 @@
     rowHeight: '50px',
     responsive: true,
     messages: {
-      noData: 'Ehhez a rendeléshez még nem adott hozzá terméket.',
+      noData: 'Nincs itthon semmi sem.',
     },
     pagination: {
       rowsPerPage: 10,
@@ -67,12 +73,18 @@
     width: '150px',
   }, {
     label: 'Mértékegység',
-    field: 'unit',
+    field: 'units',
     width: '80px',
   }, {
     label: 'Szavatossági idő',
     field: 'warranty',
     width: '80px',
+    format(value) {
+      if (value) {
+        return moment(value).format('YYYY-MM-DD');
+      }
+      return 'nincs megadva';
+    },
   }, {
     label: '',
     field: 'add',
@@ -82,17 +94,114 @@
   export default {
     data() {
       return {
+        loading: false,
         config: tableConfig,
         columns: tableColumns,
+        addItem: {
+          shoppingList: '',
+          quantity: null,
+          units: '',
+        },
+        expiredItems: [],
       };
     },
     created() {
       this.$store.dispatch('setItemsRef');
       this.$store.dispatch('setShoppingListsRef');
+      this.$store.dispatch('setFirstListRef');
+      this.$store.dispatch('setSecondListRef');
+
+      this.table.forEach((elem) => {
+        if (elem) {
+          if (elem.warranty && moment(elem.warranty).isBefore(moment(new Date()))) {
+            this.expiredItems.push(elem.name);
+          }
+        }
+        return '';
+      });
+
+      if (this.expiredItems.length) {
+        const alert = Alert.create({
+          enter: 'bounceInRight',
+          leave: 'bounceOutRight',
+          color: 'negative',
+          icon: 'warning',
+          html: `Lejártak az alábbi termékek szav.idejei: ${this.expiredItems}`,
+          position: 'top-right',
+        });
+
+        setTimeout(() => {
+          alert.dismiss();
+        }, 3000);
+      }
     },
     methods: {
-      addToShoppingList(elem) {
-        this.shoppingListsRef.push(elem);
+      addToShoppingList(item) {
+        console.log(item);
+        const message = `
+        Melyik bevásárló listához adjuk hozzá?
+          `;
+
+        const dialog = Dialog.create({
+          title: 'Mennyi kell belőle?',
+          message,
+          form: {
+            shoppingLists: {
+              type: 'radio',
+              model: this.addItem.shoppingList,
+              items: this.shoppingLists,
+            },
+            quantity: {
+              type: 'number',
+              label: 'Mennyiség',
+              model: this.addItem.quantity,
+            },
+            units: {
+              type: 'text',
+              label: 'Mértékegység',
+              model: item.units,
+            },
+
+          },
+          buttons: [{
+            label: 'Vissza',
+            color: 'primary',
+            handler() {
+              const timeout = setTimeout(() => {
+                clearInterval(timeout);
+                dialog.close();
+              }, 3000);
+
+              clearTimeout(timeout);
+            },
+          }, {
+            label: 'Hozzáadás',
+            color: 'indigo-7',
+            handler: (data) => {
+              this.loading = true;
+              console.log(data);
+              if (this.$store.state.shoppingLists.find((o) => {
+                return o['.key'] === data.shoppingLists;
+              })) {
+                const ref = `${data.shoppingLists}Ref`;
+
+                this.$store.state[`${ref}`].push({
+                  name: item.name,
+                  quantity: data.quantity,
+                  units: data.units,
+
+                });
+              }
+            },
+          }],
+        });
+
+        /* this.shoppingListsRef.push({
+          key: new Date().getTime(),
+          name: elem.name,
+          quantity: elem.quantity,
+          units: elem.units,
+        }); */
       },
     },
     computed: {
@@ -100,10 +209,24 @@
         return this.$store.state.items;
       },
       shoppingLists() {
-        return this.$store.state.shoppingLists;
+        const shoppingLists =
+          this.$store.state.shoppingLists
+            .map((value) => {
+              const mappedValue = {
+                label: `${value['.key']}`,
+                value: value['.key'],
+              };
+
+              return mappedValue;
+            });
+
+        return shoppingLists;
       },
       shoppingListsRef() {
         return this.$store.state.shoppingListsRef;
+      },
+      firstListRef() {
+        return this.$store.state.firstShoppingListRef;
       },
     },
     components: {

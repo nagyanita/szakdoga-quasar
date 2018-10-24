@@ -4,7 +4,7 @@
 
     <div class="fields">
       <q-field>
-        <q-input v-model="note" type="textarea" />
+        <q-input v-model="text" type="textarea" />
       </q-field>
     </div>
 
@@ -26,7 +26,7 @@
     export default {
       data() {
         return {
-          note: '',
+          text: '',
         };
       },
       methods: {
@@ -35,7 +35,17 @@
           this.$refs.addNoteModal.open();
         },
         addNote() {
-          console.log(this.note);
+          this.notesRef.push({
+            create: new Date().toISOString(),
+            text: this.text,
+          }).then(() => {
+            this.$refs.addNoteModal.close();
+          });
+        },
+      },
+      computed: {
+        notesRef() {
+          return this.$store.state.notesRef;
         },
       },
       components: {

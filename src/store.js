@@ -15,14 +15,25 @@ firebase.initializeApp(config);
 const database = firebase.database();
 
 const itemsRef = database.ref('items');
+
 const shoppingListsRef = database.ref('shoppingLists');
+const firstListRef = database.ref('shoppingLists/firstList');
+const secondListRef = database.ref('shoppingLists/secondList');
+
+const notesRef = database.ref('notes');
 
 export default {
   state: {
     items: [],
     shoppingLists: [],
+    firstList: [],
+    secondList: [],
+    notes: [],
     itemsRef,
     shoppingListsRef,
+    firstListRef,
+    secondListRef,
+    notesRef,
   },
   mutations: firebaseMutations,
   actions: {
@@ -35,6 +46,21 @@ export default {
       bindFirebaseRef,
     }) => {
       bindFirebaseRef('shoppingLists', shoppingListsRef);
+    }),
+    setFirstListRef: firebaseAction(({
+      bindFirebaseRef,
+    }) => {
+      bindFirebaseRef('firstList', firstListRef);
+    }),
+    setSecondListRef: firebaseAction(({
+      bindFirebaseRef,
+    }) => {
+      bindFirebaseRef('secondList', secondListRef);
+    }),
+    setNotesRef: firebaseAction(({
+      bindFirebaseRef,
+    }) => {
+      bindFirebaseRef('notes', notesRef);
     }),
   },
 };
