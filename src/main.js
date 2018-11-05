@@ -4,6 +4,7 @@ import 'quasar-extras/fontawesome';
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueFirestore from 'vue-firestore';
 import Quasar from 'quasar';
 import router from './router';
 
@@ -24,6 +25,7 @@ require(`quasar/dist/quasar.${__THEME}.css`);
 Vue.config.productionTip = false;
 Vue.use(Quasar); // Install Quasar Framework
 Vue.use(Vuex);
+Vue.use(VueFirestore);
 
 if (__THEME === 'mat') {
   require('quasar-extras/roboto-font');

@@ -43,15 +43,22 @@
   } from 'quasar';
 
   import moment from 'moment';
+  import {
+    database,
+  } from '../store';
 
   import AddNoteModal from './AddNote.vue';
 
   export default {
     data() {
-      return {};
+      return {
+        notes: [],
+      };
     },
-    created() {
-      this.$store.dispatch('setNotesRef');
+    firestore() {
+      return {
+        notes: database.collection('notes'),
+      };
     },
     methods: {
       removeNote(note) {
@@ -113,14 +120,6 @@
     filters: {
       moment(date) {
         return moment(date).format('YYYY-MM-DD');
-      },
-    },
-    computed: {
-      notes() {
-        return this.$store.state.notes;
-      },
-      notesRef() {
-        return this.$store.state.notesRef;
       },
     },
     components: {

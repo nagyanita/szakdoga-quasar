@@ -2,7 +2,7 @@
   <div>
     <h6 class="on-right">Otthoni készlet</h6>
 
-    <q-data-table :data="table" :config="config" :columns="columns">
+    <q-data-table :data="items" :config="config" :columns="columns">
       <template slot="col-add" scope="cell">
         <q-btn color="indigo-7" small @click="addToShoppingList(cell.row)">Hozzáadás bev.listához</q-btn>
       </template>
@@ -28,6 +28,10 @@
   } from 'quasar';
 
   import moment from 'moment';
+  import {
+    database,
+  } from '../store';
+
 
   import AddItemModal from './AddItem.vue';
 
@@ -102,16 +106,17 @@
           quantity: null,
           units: '',
         },
+        items: [],
         expiredItems: [],
       };
     },
+    firestore() {
+      return {
+        items: database.collection('items'),
+      };
+    },
     created() {
-      this.$store.dispatch('setItemsRef');
-      this.$store.dispatch('setShoppingListsRef');
-      this.$store.dispatch('setFirstListRef');
-      this.$store.dispatch('setSecondListRef');
-
-      this.table.forEach((elem) => {
+      this.items.forEach((elem) => {
         if (elem) {
           if (elem.warranty && moment(elem.warranty).isBefore(moment(new Date()))) {
             this.expiredItems.push(elem.name);
@@ -205,9 +210,6 @@
       },
     },
     computed: {
-      table() {
-        return this.$store.state.items;
-      },
       shoppingLists() {
         const shoppingLists =
           this.$store.state.shoppingLists

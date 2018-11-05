@@ -1,66 +1,22 @@
-import firebase from 'firebase';
-import { firebaseMutations, firebaseAction } from 'vuexfire';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 const config = {
-  apiKey: 'AIzaSyC09wba_8ysxNfMblmZrzlgWraGW8z4xsM',
-  authDomain: 'szakdoga-quasar.firebaseapp.com',
-  databaseURL: 'https://szakdoga-quasar.firebaseio.com',
-  projectId: 'szakdoga-quasar',
-  storageBucket: 'szakdoga-quasar.appspot.com',
-  messagingSenderId: '804553793662',
+  apiKey: 'AIzaSyDV24_NMIHhK3B3sV1sUzVmUjuho5gonFY',
+  authDomain: 'szakdogaquasar.firebaseapp.com',
+  databaseURL: 'https://szakdogaquasar.firebaseio.com',
+  projectId: 'szakdogaquasar',
+  storageBucket: 'szakdogaquasar.appspot.com',
+  messagingSenderId: '493399463244',
 };
 
 firebase.initializeApp(config);
 
-const database = firebase.database();
+export const database = firebase.firestore();
 
-const itemsRef = database.ref('items');
+database.settings({
+  timestampsInSnapshots: true,
+});
 
-const shoppingListsRef = database.ref('shoppingLists');
-const firstListRef = database.ref('shoppingLists/firstList');
-const secondListRef = database.ref('shoppingLists/secondList');
-
-const notesRef = database.ref('notes');
-
-export default {
-  state: {
-    items: [],
-    shoppingLists: [],
-    firstList: [],
-    secondList: [],
-    notes: [],
-    itemsRef,
-    shoppingListsRef,
-    firstListRef,
-    secondListRef,
-    notesRef,
-  },
-  mutations: firebaseMutations,
-  actions: {
-    setItemsRef: firebaseAction(({
-      bindFirebaseRef,
-    }) => {
-      bindFirebaseRef('items', itemsRef);
-    }),
-    setShoppingListsRef: firebaseAction(({
-      bindFirebaseRef,
-    }) => {
-      bindFirebaseRef('shoppingLists', shoppingListsRef);
-    }),
-    setFirstListRef: firebaseAction(({
-      bindFirebaseRef,
-    }) => {
-      bindFirebaseRef('firstList', firstListRef);
-    }),
-    setSecondListRef: firebaseAction(({
-      bindFirebaseRef,
-    }) => {
-      bindFirebaseRef('secondList', secondListRef);
-    }),
-    setNotesRef: firebaseAction(({
-      bindFirebaseRef,
-    }) => {
-      bindFirebaseRef('notes', notesRef);
-    }),
-  },
-};
+export default {};

@@ -13,13 +13,14 @@
   },
   "dependencies": {
     "babel-runtime": "^6.25.0",
-    "firebase": "^4.9.0",
+    "firebase": "^5.5.5",
     "lodash": "^4.17.5",
     "moment": "^2.22.2",
     "quasar": "0.0.18",
     "quasar-extras": "0.x",
     "quasar-framework": "^0.14.4",
     "vue": "^2.5.13",
+    "vue-firestore": "^0.3.1",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "vuexfire": "^2.3.0"

@@ -2,12 +2,13 @@
   <div>
     <h6 class="on-right">
       Bevásárló listá(i)m
+      {{ lists }}
     </h6>
 
     <div class="row justify-center">
-      <q-card inline class="notes" v-for="shoppingList in this.shoppingLists">
+      <q-card inline class="notes" v-for="shoppingList in shoppingLists">
         <q-card-title>
-          {{ shoppingList['.key'] }}
+          {{ shoppingList }}
           <q-icon slot="right" name="more_vert">
             <q-popover ref="popover">
               <q-list link class="no-border">
@@ -62,31 +63,37 @@
     QBtn,
   } from 'quasar';
 
+  import {
+    database,
+  } from '../store';
+
   import addShoppingListModal from './AddShoppingList.vue';
 
   export default {
     data() {
       return {
-
+        shoppingLists: [],
       };
     },
-    created() {
-      this.$store.dispatch('setShoppingListsRef');
-      this.$store.dispatch('setFirstListRef');
-      this.$store.dispatch('setSecondListRef');
+    firestore() {
+      return {
+        shoppingLists: database.collection('shoppingLists'),
+      };
     },
     computed: {
-      shoppingLists() {
-        return this.$store.state.shoppingLists;
-      },
-      shoppingListsRef() {
-        return this.$store.state.shoppingListsRef;
-      },
-      firstListRef() {
-        return this.$store.state.firstShoppingListRef;
-      },
-      secondListRef() {
-        return this.$store.state.secondShoppingListRef;
+      lists() {
+        const docRef = database.collection('shoppingLists').doc(this.shoppingLists['.key']).collection('firstList');
+
+        docRef.get().then((doc) => {
+          if (doc.exists) {
+            console.log('Document data:', doc.data());
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        }).catch((error) => {
+          console.log('Error getting document:', error);
+        });
       },
     },
     components: {
